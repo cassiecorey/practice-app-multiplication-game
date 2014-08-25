@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MultiplicationGame</string>
+    <string name="title_activity_game_init">GameInitActivity</string>
+    <string name="table_size">12 x 12</string>
+
+    <!-- Button strings -->
+    <string name="button_init_game">Start</string>
+    <string name="button_highscores">Highscores</string>
+    <string name="button_start_game">Begin!</string>
+    <string name="button_table_size">Change size</string>
+    <string name="title_activity_game">GameActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>

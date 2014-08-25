@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <NumberPicker
+        android:id="@+id/size_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    
+	<Button 
+	    android:id="@+id/start_game"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="25dp"
+	    android:text="@string/button_start_game"
+	    android:onClick="startGame"/>
+    
+</LinearLayout>
