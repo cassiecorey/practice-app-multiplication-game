@@ -4,13 +4,14 @@
     <!-- Button strings -->
     <string name="button_init_game">New game</string>
     <string name="button_highscores">Highscores</string>
-    <string name="button_start_game">Start!</string>
+    <string name="button_start_game">Start</string>
 
     <!-- Leaderboard activity strings -->
     <string name="leaderboard_title">Highscores</string>
     <string name="name_title">Name</string>
     <string name="score_title">Score</string>
     <string name="clear_scores">Reset</string>
+    <string name="menu">Menu</string>
 
     <!-- Game over activity strings -->
     <string name="game_over">Game Over</string>
@@ -27,6 +28,7 @@
     <string name="no">No</string>
     <string name="resume">Keep playing</string>
     <string name="quit">Quit</string>
+    <string name="table_size">Biggest multiplier:</string>
 
 
 </resources>

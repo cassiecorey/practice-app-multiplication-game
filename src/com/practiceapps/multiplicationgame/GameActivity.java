@@ -4,11 +4,13 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,7 +22,8 @@ public class GameActivity extends Activity {
 	private int size;
 	private int score = 0;
 	private final long startTime = 60 * 1000;
-	private final long interval = 10;
+	private final long interval = 1000;
+	private long timeRemaining = 60 * 1000;
 	private boolean quitting = false;
 	private CountDownTimer countDownTimer;
 	
@@ -50,6 +53,8 @@ public class GameActivity extends Activity {
 		timerView = (TextView) findViewById(R.id.timer);
 		correctToast = Toast.makeText(getApplicationContext(), "Correct!  +10", Toast.LENGTH_SHORT);
 		incorrectToast = Toast.makeText(getApplicationContext(), "Incorrect  -2", Toast.LENGTH_SHORT);
+		correctToast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
+		incorrectToast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
 		quitting = false;
 		countDownTimer = new MyCountDownTimer(startTime, interval, this);
 		countDownTimer.start();
@@ -63,14 +68,24 @@ public class GameActivity extends Activity {
 			pauseGame(null);
 		}
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		countDownTimer = new MyCountDownTimer(timeRemaining, interval, this);
+		countDownTimer.start();
+	}
 
 	public void pauseGame(View v) {
+		final View view = v;
+		countDownTimer.cancel();
 		new AlertDialog.Builder(this)
 		//.setTitle("Delete entry")
 		.setMessage("Game paused")
 		.setPositiveButton(R.string.resume, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				//resume play
+				countDownTimer = new MyCountDownTimer(timeRemaining, interval, view.getContext());
+				countDownTimer.start();
 			}
 		})
 		.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
@@ -158,7 +173,7 @@ public class GameActivity extends Activity {
 		} else {
 			incorrectToast.show();
 		}
-		//Override to make toast disappear in 1 second instead of preset min of 2
+		//Override to make toast disappear in 1/2 second instead of preset min of 2
 		Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
 			@Override
@@ -170,22 +185,24 @@ public class GameActivity extends Activity {
 	}
 	
 	private class MyCountDownTimer extends CountDownTimer {
-		GameActivity activity;
+		Context activity;
 		
-		public MyCountDownTimer(long startTime, long interval, GameActivity activity) {
+		public MyCountDownTimer(long startTime, long interval, Context activity) {
 			super(startTime, interval);
 			this.activity = activity;
 		}
 		
 		@Override
 		public void onFinish() {
+			quitting = true;
 			Intent intent = new Intent(activity, GameOverActivity.class);
 			activity.startActivity(intent);
 		}
 		
 		@Override
 		public void onTick(long millisUntilFinished) {
-			timerView.setText(String.format("%.3f", (float) millisUntilFinished / 1000.0));
+			timeRemaining = millisUntilFinished;
+			timerView.setText(String.valueOf(millisUntilFinished / 1000));
 		}
 	}
 }
