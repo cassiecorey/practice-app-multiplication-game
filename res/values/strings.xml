@@ -7,7 +7,7 @@
     <string name="button_start_game">Start!</string>
 
     <!-- Leaderboard activity strings -->
-    <string name="leaderboard_title">Highscores:</string>
+    <string name="leaderboard_title">Highscores</string>
     <string name="name_title">Name</string>
     <string name="score_title">Score</string>
     <string name="clear_scores">Reset</string>

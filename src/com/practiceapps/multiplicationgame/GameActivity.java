@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
@@ -15,14 +16,19 @@ import android.widget.Toast;
 
 public class GameActivity extends Activity {
 
-	int answer;
-	int size;
-	int score = 0;
-	boolean quitting = false;
-	Random rand = new Random();
-	TextView scoreView;
-	Toast incorrectToast = null;
-	Toast correctToast = null;
+	private int answer;
+	private int size;
+	private int score = 0;
+	private final long startTime = 60 * 1000;
+	private final long interval = 10;
+	private boolean quitting = false;
+	private CountDownTimer countDownTimer;
+	
+	private Random rand = new Random();
+	private TextView scoreView;
+	private TextView timerView;
+	private Toast incorrectToast = null;
+	private Toast correctToast = null;
 
 	private void incScore(int i) {
 		score+=i;
@@ -41,37 +47,41 @@ public class GameActivity extends Activity {
 		setContentView(R.layout.activity_game);
 		size = Integer.parseInt(getIntent().getStringExtra("size"));
 		scoreView = (TextView) findViewById(R.id.score);
+		timerView = (TextView) findViewById(R.id.timer);
 		correctToast = Toast.makeText(getApplicationContext(), "Correct!  +10", Toast.LENGTH_SHORT);
 		incorrectToast = Toast.makeText(getApplicationContext(), "Incorrect  -2", Toast.LENGTH_SHORT);
 		quitting = false;
+		countDownTimer = new MyCountDownTimer(startTime, interval, this);
+		countDownTimer.start();
 		newQuestion();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		if(!quitting) {
-		pauseGame(null);
+			pauseGame(null);
 		}
 	}
-	
+
 	public void pauseGame(View v) {
 		new AlertDialog.Builder(this)
-	    //.setTitle("Delete entry")
-	    .setMessage("Game paused")
-	    .setPositiveButton(R.string.resume, new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int which) {
-	        	//resume play
-	        }
-	     })
-	    .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int which) { 
-	        	quitting = true;
-	            endGame();
-	        }
-	     })
-	    .setIcon(android.R.drawable.ic_dialog_alert)
-	     .show();
+		//.setTitle("Delete entry")
+		.setMessage("Game paused")
+		.setPositiveButton(R.string.resume, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				//resume play
+			}
+		})
+		.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) { 
+				quitting = true;
+				Intent intent = new Intent(GameActivity.this, MainActivity.class);
+				startActivity(intent);
+			}
+		})
+		.setIcon(android.R.drawable.ic_dialog_alert)
+		.show();
 	}
 
 	public void checkAnswer(View v) {
@@ -99,7 +109,7 @@ public class GameActivity extends Activity {
 		Button button2 = (Button) findViewById(R.id.result2);
 		Button button3 = (Button) findViewById(R.id.result3);
 		Button button4 = (Button) findViewById(R.id.result4);
-		
+
 		//generate two random multipliers
 		int x = rand.nextInt(size)+1;
 		int y = rand.nextInt(size)+1;
@@ -159,9 +169,23 @@ public class GameActivity extends Activity {
 		}, 500);
 	}
 	
-	private void endGame() {
-		Intent intent = new Intent(this, GameOverActivity.class);
-		intent.putExtra("score", String.valueOf(score));
-		startActivity(intent);
+	private class MyCountDownTimer extends CountDownTimer {
+		GameActivity activity;
+		
+		public MyCountDownTimer(long startTime, long interval, GameActivity activity) {
+			super(startTime, interval);
+			this.activity = activity;
+		}
+		
+		@Override
+		public void onFinish() {
+			Intent intent = new Intent(activity, GameOverActivity.class);
+			activity.startActivity(intent);
+		}
+		
+		@Override
+		public void onTick(long millisUntilFinished) {
+			timerView.setText(String.format("%.3f", (float) millisUntilFinished / 1000.0));
+		}
 	}
 }

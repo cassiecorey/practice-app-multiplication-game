@@ -18,6 +18,7 @@ public class GameInitActivity extends Activity {
 		sizePicker = (NumberPicker) findViewById(R.id.size_picker);
 		sizePicker.setMinValue(5);
 		sizePicker.setMaxValue(15);
+		sizePicker.setValue(12);
 		sizePicker.setWrapSelectorWheel(false);
 		sizePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 	}

@@ -15,6 +15,16 @@
         android:textSize="20sp"
         android:text="Score: 0" />
     
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="4dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:text="59" />
+    
     <Button 
         android:id="@+id/pause"
         android:layout_width="wrap_content"
