@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">MultiplicationGame</string>
-    <string name="title_activity_game_init">GameInitActivity</string>
-    <string name="table_size">12 x 12</string>
-
     <!-- Button strings -->
-    <string name="button_init_game">Start</string>
+    <string name="button_init_game">New game</string>
     <string name="button_highscores">Highscores</string>
-    <string name="button_start_game">Begin!</string>
-    <string name="button_table_size">Change size</string>
-    <string name="title_activity_game">GameActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="button_start_game">Start!</string>
+
+    <!-- Leaderboard activity strings -->
+    <string name="leaderboard_title">Highscores:</string>
+    <string name="name_title">Name</string>
+    <string name="score_title">Score</string>
+    <string name="clear_scores">Reset</string>
+
+    <!-- Game over activity strings -->
+    <string name="game_over">Game Over</string>
+    <string name="play_again">Play again</string>
+    <string name="main_menu">Main menu</string>
+    <string name="title_activity_game_over">GameOverActivity</string>
+
+    <!-- Other strings -->
+    <string name="app_name">Multiplication Game</string>
+    <string name="title_activity_game_init">Game setup</string>
+    <string name="title_activity_leaderboard">LeaderboardActivity</string>
+    <string name="title_activity_game">Multiplication</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="resume">Keep playing</string>
+    <string name="quit">Quit</string>
+
 
 </resources>

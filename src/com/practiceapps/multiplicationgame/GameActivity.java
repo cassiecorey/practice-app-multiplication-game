@@ -3,6 +3,9 @@ package com.practiceapps.multiplicationgame;
 import java.util.Random;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -15,30 +18,78 @@ public class GameActivity extends Activity {
 	int answer;
 	int size;
 	int score = 0;
+	boolean quitting = false;
 	Random rand = new Random();
+	TextView scoreView;
+	Toast incorrectToast = null;
+	Toast correctToast = null;
+
+	private void incScore(int i) {
+		score+=i;
+	}
+
+	private void decScore(int i) {
+		score-=i;
+		if(score<0) {
+			score = 0;
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		size = Integer.parseInt(getIntent().getStringExtra("size"));
-		System.out.println(size);
+		scoreView = (TextView) findViewById(R.id.score);
+		correctToast = Toast.makeText(getApplicationContext(), "Correct!  +10", Toast.LENGTH_SHORT);
+		incorrectToast = Toast.makeText(getApplicationContext(), "Incorrect  -2", Toast.LENGTH_SHORT);
+		quitting = false;
 		newQuestion();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(!quitting) {
+		pauseGame(null);
+		}
+	}
+	
+	public void pauseGame(View v) {
+		new AlertDialog.Builder(this)
+	    //.setTitle("Delete entry")
+	    .setMessage("Game paused")
+	    .setPositiveButton(R.string.resume, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) {
+	        	//resume play
+	        }
+	     })
+	    .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	        	quitting = true;
+	            endGame();
+	        }
+	     })
+	    .setIcon(android.R.drawable.ic_dialog_alert)
+	     .show();
 	}
 
 	public void checkAnswer(View v) {
 		String bText = ((Button) v).getText().toString();
+		//wrapped in "if" so that if they press an X twice nothing happens
 		if(!bText.equals("X")) {
 			int chosenAnswer = Integer.parseInt(bText);
 			if(chosenAnswer==answer) {
 				showToast(true);
-
+				incScore(10);
 				newQuestion();
 
 			} else {
 				showToast(false);
 				((Button) v).setText("X");
+				decScore(2);
 			}
+			scoreView.setText("Score: " + score);
 		}
 	}
 
@@ -48,7 +99,7 @@ public class GameActivity extends Activity {
 		Button button2 = (Button) findViewById(R.id.result2);
 		Button button3 = (Button) findViewById(R.id.result3);
 		Button button4 = (Button) findViewById(R.id.result4);
-
+		
 		//generate two random multipliers
 		int x = rand.nextInt(size)+1;
 		int y = rand.nextInt(size)+1;
@@ -92,21 +143,25 @@ public class GameActivity extends Activity {
 	}
 
 	private void showToast(boolean correct) {
-		final Toast toast;
 		if(correct) {
-			toast = Toast.makeText(getApplicationContext(), "Correct!", Toast.LENGTH_SHORT);
+			correctToast.show();
 		} else {
-			toast = Toast.makeText(getApplicationContext(), "Incorrect", Toast.LENGTH_SHORT);
+			incorrectToast.show();
 		}
-		toast.show();
-
 		//Override to make toast disappear in 1 second instead of preset min of 2
 		Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				toast.cancel();
+				correctToast.cancel();
+				incorrectToast.cancel();
 			}
-		}, 1000);
+		}, 500);
+	}
+	
+	private void endGame() {
+		Intent intent = new Intent(this, GameOverActivity.class);
+		intent.putExtra("score", String.valueOf(score));
+		startActivity(intent);
 	}
 }
