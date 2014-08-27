@@ -23,6 +23,7 @@ public class GameActivity extends Activity {
 	private final long startTime = 60 * 1000;
 	private final long interval = 1000;
 	private long timeRemaining = 60 * 1000;
+	private boolean isPaused = false;
 	private CountDownTimer countDownTimer;
 	private GameActivity thisGame;
 	
@@ -67,7 +68,9 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		countDownTimer.cancel();
+		if(!isPaused) {
+		pauseGame(this.getCurrentFocus());
+		}
 	}
 	
 	@Override
@@ -77,13 +80,15 @@ public class GameActivity extends Activity {
 
 	public void pauseGame(View v) {
 		final View view = v;
+		isPaused = true;
 		countDownTimer.cancel();
 		new AlertDialog.Builder(this)
-		//.setTitle("Delete entry")
 		.setMessage("Game paused")
 		.setPositiveButton(R.string.resume, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				// something to resume timer
+				isPaused = false;
+				countDownTimer = new MyCountDownTimer(timeRemaining, interval);
+				countDownTimer.start();
 			}
 		})
 		.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
@@ -94,6 +99,7 @@ public class GameActivity extends Activity {
 			}
 		})
 		.setIcon(android.R.drawable.ic_dialog_alert)
+		.setCancelable(false)
 		.show();
 	}
 
@@ -190,7 +196,9 @@ public class GameActivity extends Activity {
 		
 		@Override
 		public void onFinish() {
+			isPaused=false;
 			Intent intent = new Intent(thisGame, GameOverActivity.class);
+			intent.putExtra("score", String.valueOf(score));
 			startActivity(intent);
 			finish();
 		}

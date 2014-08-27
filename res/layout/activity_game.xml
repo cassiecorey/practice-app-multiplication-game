@@ -12,69 +12,70 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_margin="25dp"
-        android:textSize="20sp"
-        android:text="Score: 0" />
-    
+        android:text="Score: 0"
+        android:textSize="20sp" />
+
     <TextView
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
         android:layout_centerHorizontal="true"
-        android:textSize="30sp"
-        android:text="59" />
-    
-    <Button 
+        android:layout_margin="10dp"
+        android:text="59"
+        android:textSize="30sp" />
+
+    <Button
         android:id="@+id/pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_margin="4dp"
-        android:text="Pause"
-        android:onClick="pauseGame"/>
+        android:onClick="pauseGame"
+        android:text="Pause" />
 
-    <LinearLayout
-        android:id="@+id/results"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/result3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="25dp"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_alignBaseline="@+id/result4"
+        android:layout_alignBottom="@+id/result4"
+        android:layout_toLeftOf="@+id/timer"
+        android:onClick="checkAnswer" />
 
-        <Button
-            android:id="@+id/result1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="checkAnswer" />
+    <Button
+        android:id="@+id/result4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/result2"
+        android:layout_marginTop="18dp"
+        android:layout_toRightOf="@+id/timer"
+        android:onClick="checkAnswer" />
 
-        <Button
-            android:id="@+id/result2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="checkAnswer" />
+    <Button
+        android:id="@+id/result2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/result4"
+        android:layout_centerVertical="true"
+        android:onClick="checkAnswer" />
 
-        <Button
-            android:id="@+id/result3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="checkAnswer" />
-
-        <Button
-            android:id="@+id/result4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="checkAnswer" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/result1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/result4"
+        android:layout_toLeftOf="@+id/timer"
+        android:onClick="checkAnswer" />
 
     <TextView
         android:id="@+id/question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/score"
+        android:layout_marginTop="26dp"
         android:gravity="center"
         android:text="Question"
         android:textSize="50sp"
