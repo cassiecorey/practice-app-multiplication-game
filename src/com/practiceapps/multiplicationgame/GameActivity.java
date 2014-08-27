@@ -4,7 +4,6 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,8 +23,8 @@ public class GameActivity extends Activity {
 	private final long startTime = 60 * 1000;
 	private final long interval = 1000;
 	private long timeRemaining = 60 * 1000;
-	private boolean quitting = false;
 	private CountDownTimer countDownTimer;
+	private GameActivity thisGame;
 	
 	private Random rand = new Random();
 	private TextView scoreView;
@@ -43,6 +42,10 @@ public class GameActivity extends Activity {
 			score = 0;
 		}
 	}
+	
+	private void setTimeRemaining(long timeRemaining) {
+		this.timeRemaining = timeRemaining;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +58,8 @@ public class GameActivity extends Activity {
 		incorrectToast = Toast.makeText(getApplicationContext(), "Incorrect  -2", Toast.LENGTH_SHORT);
 		correctToast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
 		incorrectToast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
-		quitting = false;
-		countDownTimer = new MyCountDownTimer(startTime, interval, this);
+		countDownTimer = new MyCountDownTimer(startTime, interval);
+		thisGame = this;
 		countDownTimer.start();
 		newQuestion();
 	}
@@ -64,16 +67,12 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(!quitting) {
-			pauseGame(null);
-		}
+		countDownTimer.cancel();
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		countDownTimer = new MyCountDownTimer(timeRemaining, interval, this);
-		countDownTimer.start();
 	}
 
 	public void pauseGame(View v) {
@@ -84,14 +83,13 @@ public class GameActivity extends Activity {
 		.setMessage("Game paused")
 		.setPositiveButton(R.string.resume, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				countDownTimer = new MyCountDownTimer(timeRemaining, interval, view.getContext());
-				countDownTimer.start();
+				// something to resume timer
 			}
 		})
 		.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) { 
-				quitting = true;
-				Intent intent = new Intent(GameActivity.this, MainActivity.class);
+				Intent intent = new Intent(view.getContext(), GameInitActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 			}
 		})
@@ -185,23 +183,21 @@ public class GameActivity extends Activity {
 	}
 	
 	private class MyCountDownTimer extends CountDownTimer {
-		Context activity;
 		
-		public MyCountDownTimer(long startTime, long interval, Context activity) {
+		public MyCountDownTimer(long startTime, long interval) {
 			super(startTime, interval);
-			this.activity = activity;
 		}
 		
 		@Override
 		public void onFinish() {
-			quitting = true;
-			Intent intent = new Intent(activity, GameOverActivity.class);
-			activity.startActivity(intent);
+			Intent intent = new Intent(thisGame, GameOverActivity.class);
+			startActivity(intent);
+			finish();
 		}
 		
 		@Override
 		public void onTick(long millisUntilFinished) {
-			timeRemaining = millisUntilFinished;
+			setTimeRemaining(millisUntilFinished);
 			timerView.setText(String.valueOf(millisUntilFinished / 1000));
 		}
 	}
